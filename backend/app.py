@@ -35,11 +35,15 @@ app = Flask(__name__)
 # In production, set FIZZZIO_SECRET_KEY as a real environment variable.
 app.config["SECRET_KEY"] = os.environ.get("FIZZZIO_SECRET_KEY", secrets.token_hex(32))
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
 # When the frontend is served from a *different* origin than the API
-# (e.g. Netlify frontend + Render backend), the browser needs the cookie
-# marked Secure + SameSite=None over HTTPS for cross-site requests to work.
-app.config["SESSION_COOKIE_SECURE"] = os.environ.get("FIZZZIO_HTTPS", "0") == "1"
+# (e.g. Netlify frontend + Render backend), the browser only sends
+# cookies back on cross-site requests if the cookie is marked
+# SameSite=None AND Secure. SameSite=None without Secure is rejected
+# by browsers outright, so the two settings are tied to the same flag.
+IS_CROSS_SITE_HTTPS = os.environ.get("FIZZZIO_HTTPS", "0") == "1"
+app.config["SESSION_COOKIE_SAMESITE"] = "None" if IS_CROSS_SITE_HTTPS else "Lax"
+app.config["SESSION_COOKIE_SECURE"] = IS_CROSS_SITE_HTTPS
 
 # Comma-separated list of allowed frontend origins for CORS.
 # Example: "https://fizzzio.netlify.app,http://localhost:8080"
