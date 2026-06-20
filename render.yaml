@@ -12,9 +12,10 @@ services:
       - key: FIZZZIO_HTTPS
         value: "1"
       - key: FIZZZIO_ALLOWED_ORIGINS
-        value: "http://localhost:8080"
-        # ⬆️ Update this in the Render dashboard after your frontend
-        # is deployed — set it to your real Netlify/Vercel URL.
+        value: "https://dulcet-fairy-d1c5f7.netlify.app"
+        # ⬆️ If you get a new Netlify URL or add more frontends later,
+        # update this value here (comma-separate multiple origins) and
+        # push — Render's Blueprint sync will pick it up automatically.
     # NOTE: Render's free tier doesn't support persistent disks, so
     # there's no FIZZZIO_DB_PATH override here — the SQLite file lives
     # in the app's own ephemeral filesystem (backend/fizzzio.db) and
