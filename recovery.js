@@ -1,5 +1,3 @@
-// PHYSIOFLOW AI - INTERACTIVE RECOVERY BODY MAP MODULE
-
 let toastCallback = null;
 
 // Comprehensive Muscle stretching database
