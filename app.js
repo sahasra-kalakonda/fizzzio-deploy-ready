@@ -1,4 +1,6 @@
 // FIZZZIO - MAIN APPLICATION MODULE
+//used github copilot to help setup the pages, and functioning the user authentication section
+
 import { initCharts, updateCharts } from './charts.js';
 import { initPosture, stopPosture } from './posture.js';
 import { initRecovery } from './recovery.js';
