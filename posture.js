@@ -1,8 +1,10 @@
 // FIZZZIO - REAL AI POSTURE CAMERA ENGINE
+// used chat gbt too understand on how to change the webcam feature from an
+// automatic simulation to an actual detection-system
+
 // Uses Google's MediaPipe Pose Landmarker (BlazePose) running entirely
-// in-browser via WebAssembly — no backend involvement, no API keys,
-// no per-frame network calls. The model runs locally on-device.
-//
+// in-browser via WebAssembly
+
 // SIMULATION FALLBACK: if the camera is denied, or the model fails to
 // load (slow connection, unsupported browser, ad-blocker, CDN hiccup,
 // etc.), this module falls back to the original sine-wave-driven mock
@@ -10,8 +12,7 @@
 // outright. The MediaPipe library itself is loaded with a dynamic
 // import() (not a static top-level import) specifically so that a
 // failure to fetch it can be caught here, rather than crashing this
-// entire module — and therefore the whole app, since app.js imports
-// from this file — before anything ever runs.
+// entire module.
 const MEDIAPIPE_CDN_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
 
 let videoEl = null;
@@ -257,10 +258,6 @@ function mapLandmarksToJoints(lm, canvasW, canvasH) {
   joints.ankleR = toPoint(lm[28]);
 }
 
-// ---------------------------------------------------------------------------
-// Simulation mode (unchanged mock engine — used as fallback)
-// ---------------------------------------------------------------------------
-
 function startSimulationOnly() {
   stopPosture();
   videoEl.classList.add('hidden');
@@ -277,10 +274,6 @@ function startSimulationOnly() {
   }
   addCoachingMessage('Fizzz Coach', 'High-Fidelity Simulation Engine online. Select an exercise to analyze.', 'system-msg');
 }
-
-// ---------------------------------------------------------------------------
-// Shared lifecycle
-// ---------------------------------------------------------------------------
 
 export function stopPosture() {
   isRunning = false;
@@ -350,8 +343,7 @@ function renderSkeleton() {
 }
 
 // Updates the on-screen status text so it's honest about whether a
-// person is actually being seen right now (live mode only — simulation
-// mode never shows this state since hasLiveDetection is always true there).
+// person is actually being seen right now (live mode only — simulation mode never shows this state since hasLiveDetection is always true there).
 function setDetectionStatus(detected) {
   const statusEl = document.querySelector('.camera-status-text');
   if (!statusEl) return;
@@ -387,10 +379,6 @@ function drawScannerGrid(w, h) {
     ctx.stroke();
   }
 }
-
-// ---------------------------------------------------------------------------
-// Simulation joint math (verbatim from the original mock engine)
-// ---------------------------------------------------------------------------
 
 function calculateJointCoordinates(w, h) {
   const cx = w / 2;
@@ -477,10 +465,6 @@ function calculateJointCoordinates(w, h) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Rendering (shared by both modes — unchanged from the original engine)
-// ---------------------------------------------------------------------------
-
 function drawBones() {
   ctx.strokeStyle = 'hsl(145, 80%, 50%)';
   ctx.lineWidth = 4;
@@ -527,11 +511,6 @@ function drawNodes() {
     ctx.stroke();
   });
 }
-
-// ---------------------------------------------------------------------------
-// Biomechanics (unchanged trigonometry — works identically on real or
-// simulated joint coordinates, since it only cares about (x, y) points)
-// ---------------------------------------------------------------------------
 
 function getAngle(p1, p2, p3) {
   const rad = Math.atan2(p3.y - p2.y, p3.x - p2.x) - Math.atan2(p1.y - p2.y, p1.x - p2.x);
@@ -629,10 +608,6 @@ function analyzePostureMetrics() {
     }
   }
 }
-
-// ---------------------------------------------------------------------------
-// Coaching feed (unchanged)
-// ---------------------------------------------------------------------------
 
 function addCoachingMessage(sender, text, msgClass) {
   const feed = document.getElementById('coaching-feed');
